@@ -70,6 +70,6 @@ cout<<"The entered minterms are: ";
 
         */
 
-
+	system("pause");
     return 0;
 }

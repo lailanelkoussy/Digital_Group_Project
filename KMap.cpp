@@ -18,18 +18,18 @@ KMap::~KMap() {
 }
 
 void KMap::inputEx(string &a) {
-    string input, temp = "";
+    string temp = "";
     int preloc = 0;
     bool inte = true;
     unsigned long isize = a.length(); //size of the input
 
 
     for (int i = 0; i < isize; i++) {
-        if ((input[i] == ',') || (i == isize - 1)) { // checks for commas or end of input
+        if ((a[i] == ',') || (i == isize - 1)) { // checks for commas or end of input
             for (int j = preloc; j < i; j++) //basically just goes from the last saved location (where the number
-                temp += input[j];            //started) to right before the current comma and puts it all in temp
+                temp += a[j];            //started) to right before the current comma and puts it all in temp
             if (i == isize - 1)
-                temp += input[i];            //when it's the last position it skips the last one so I just add it lol
+                temp += a[i];            //when it's the last position it skips the last one so I just add it lol
             cout << temp << endl;            //the random couts scattered are used for debugging
 
             if (temp.length() > 1) //checking to see if got any periods or spaces characters
@@ -48,7 +48,7 @@ void KMap::inputEx(string &a) {
         }
     }
     noOfOnes(); // updates numbers of ones based on the size of storage
-
+	fill();
 }
 
 void KMap::noOfOnes() {

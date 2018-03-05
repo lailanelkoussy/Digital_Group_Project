@@ -28,5 +28,5 @@ private:
 
 };
 
-
+#include "KMap.cpp"
 #endif //GROUP_PROJECT_KMAP_H
