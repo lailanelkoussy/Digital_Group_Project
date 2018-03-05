@@ -18,12 +18,13 @@ public:
 
 
 private:
-    vector<int> storage;
+    vector<int> storage; // storage vector for the minterms
     void noOfOnes ();
     int ones, variables, map[2][4];
 
     void fill (); //takes the storage vector and fills the array with the values
     int getIndex (int&);
+    void printMap();
 
 };
 
