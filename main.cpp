@@ -1,42 +1,37 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include "KMap.h"
 
 using namespace std;
 
 int main() {
-    string input,temp="";
-    vector <string> storage ;
-    int preloc= 0;
+    string input;
+    KMap kmap;
+    bool accepted = true;
     unsigned long size;
 
-    cout<<"insert:";
-    getline(cin,input);
-    cout<<input<<endl;
-    size = input.size();
-    if (size>15)
-        cout<<"Invalid input";
-
-
-
-    for (int i = 0; i<size; i++)
+    cout<<"Please enter the minterms: ";
+    do
     {
-        if ((input[i] ==',')|| (i == size-1))
-        {
-            for (int j = preloc; j < i; j++)
-                temp += input[j];
-            if(i==size-1)
-                temp+=input[i];
-            cout<<temp<<endl;
-            storage.push_back(temp);
-            temp = "";
-            preloc = i+1;
+        getline(cin,input);
+        cout<<input<<endl;
+        size = input.size();
 
-        }
-    }
-    cout<<"The minterms entered were: ";
-    for (auto element:storage)
-        cout<<element;
+
+        for (int i = 0; i<size-1; i++){
+            if (input[i] == '.')
+            { accepted = false;
+                cout<<"invalid input. Please re-enter: ";
+                break; }
+
+            else accepted = true;
+
+                                        }
+
+    } while (!accepted);
+
+    kmap.inputEx(input);
 
 
 

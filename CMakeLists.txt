@@ -3,4 +3,4 @@ project(Group_Project)
 
 set(CMAKE_CXX_STANDARD 11)
 
-add_executable(Group_Project main.cpp)
+add_executable(Group_Project main.cpp KMap.cpp KMap.h)
