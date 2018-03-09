@@ -9,7 +9,8 @@
 KMap::KMap() {
     for (int i = 0; i < 2; i++)
         for (int j = 0; j < 4; j++)
-            map[i][j] = 0;
+            map[i][j].value = 0;
+
 
 }
 
@@ -61,8 +62,13 @@ void KMap::fill() {
     for (auto element: storage) {
         index = getIndex(element);
         if (element % 2 == 0) // all even minterms are in the first row
-            map[0][index] = 1;
-        else map[1][index] = 1;
+        {   map[0][index].value = 1;
+            map[0][index].decIndex = element; }
+
+        else {
+            map[1][index].value = 1;
+            map[1][index].decIndex = element;
+        }
 
     }
 
@@ -92,11 +98,92 @@ int KMap::getIndex(int &a) { //this is me taking the easy way out instead of usi
 void KMap::printMap() {
     for (int i = 0; i < 2; i++) {
         for (int j = 0; j < 4; j++)
-            cout << setw(4) << map[i][j];
+            cout << setw(4) << map[i][j].value;
         cout << endl;
     }
+}
+
+ KMap::Minterms::Minterms() {
+     value = 0;
+     noOfInclusions = 0;
+
+ }
+
+void KMap::extract() {
+    KMap::Implicant temp;
+
+        for (int i = 0; i < 2; i++)
+            for (int j = 0; j < 4; j++) {
+                if (map[i][j].value == 1){ //the if statement that includes the minterm itself only
+                    temp.mins.push_back(map[i][j]);
+                    temp.size = 1;
+                    imps.push_back(temp);
+                    map[i][j].noOfInclusions++;
+
+                    if (map[i][(j+1)%4].value == 1) { // checking if the one next to it is 1
+                        temp.mins.push_back(map[i][(j+1)%4]);
+                        temp.size = 2;
+                        imps.push_back(temp);
+                        map[i][j].noOfInclusions++;
+                        map[i][(j+1)%4].noOfInclusions++;
+                        temp.mins.pop_back();
+
+                    }
+
+
+
+                    if (j==0){
+                        if ((map[i][1].value == 1) && (map[i][2].value == 1) && (map[i][3].value == 1)) { //handles line of 4s
+                            for (int k =1; k<4; k++)
+                            {   temp.mins.push_back(map[i][k]);
+                                map[i][k].noOfInclusions++;}
+
+                            map[i][0].noOfInclusions++;
+                            temp.size = 4;
+                            imps.push_back(temp);
+
+                            temp.mins.clear();
+                            temp.mins.push_back(map[i][j]);
+                            }
+
+                    }
+
+                    if (i==0){
+                        if (map[1][j].value == 1){ // checking under
+                            temp.mins.push_back(map[1][j]);
+                            temp.size = 2;
+                            imps.push_back(temp);
+                            map[0][j].noOfInclusions++;
+                            map[1][j].noOfInclusions++;
+
+                            if ((map[0][(j+1)%4].value == 1) && (map[1][(j+1)%4].value == 1)){ // checking the square
+                                temp.mins.push_back(map[0][(j+1)%4]);
+                                temp.mins.push_back(map[1][(j+1)%4]);
+                                map[0][j].noOfInclusions++;
+                                map[1][j].noOfInclusions++;
+                                map[0][(j+1)%4].noOfInclusions++;
+                                map[1][(j+1)%4].noOfInclusions++;
+
+                                temp.size = 4;
+
+                                imps.push_back(temp);
+
+
+                            }
+
+
+
+                        }
+
+                    }
+                }
+
+
+
+
+
+
+            }
 
 
 }
-
-//TODO: Need to check if all entered inputs are valid.

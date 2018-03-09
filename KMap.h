@@ -18,15 +18,34 @@ public:
 
 
 private:
+    struct Minterms {
+        int value;
+        int noOfInclusions;
+        int decIndex;
+
+        Minterms();
+
+    };
+
+    struct Implicant {
+        string name;
+        vector<Minterms> mins;
+        int size; //the number of ones inside of it
+
+    };
+
     vector<int> storage; // storage vector for the minterms
     void noOfOnes ();
-    int ones, variables, map[2][4];
+    int ones, variables;
+    Minterms map[2][4];
+    vector<Implicant> imps;
 
     void fill (); //takes the storage vector and fills the array with the values
     int getIndex (int&);
     void printMap();
+    void extract(); //this function extracts all possible implicants from the KMap
+
 
 };
 
-#include "KMap.cpp"
 #endif //GROUP_PROJECT_KMAP_H
