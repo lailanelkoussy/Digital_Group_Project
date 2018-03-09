@@ -131,6 +131,7 @@ void KMap::extract() {
                     }
 
 
+                    if (ones>3){
 
                     if (j==0){
                         if ((map[i][1].value == 1) && (map[i][2].value == 1) && (map[i][3].value == 1)) { //handles line of 4s
@@ -147,6 +148,8 @@ void KMap::extract() {
                             }
 
                     }
+                    }
+
 
                     if (i==0){
                         if (map[1][j].value == 1){ // checking under
@@ -156,20 +159,24 @@ void KMap::extract() {
                             map[0][j].noOfInclusions++;
                             map[1][j].noOfInclusions++;
 
-                            if ((map[0][(j+1)%4].value == 1) && (map[1][(j+1)%4].value == 1)){ // checking the square
-                                temp.mins.push_back(map[0][(j+1)%4]);
-                                temp.mins.push_back(map[1][(j+1)%4]);
-                                map[0][j].noOfInclusions++;
-                                map[1][j].noOfInclusions++;
-                                map[0][(j+1)%4].noOfInclusions++;
-                                map[1][(j+1)%4].noOfInclusions++;
-
-                                temp.size = 4;
-
-                                imps.push_back(temp);
+                            if (ones>3){
 
 
-                            }
+                                if ((map[0][(j+1)%4].value == 1) && (map[1][(j+1)%4].value == 1)){ // checking the square
+                                    temp.mins.push_back(map[0][(j+1)%4]);
+                                    temp.mins.push_back(map[1][(j+1)%4]);
+                                    map[0][j].noOfInclusions++;
+                                    map[1][j].noOfInclusions++;
+                                    map[0][(j+1)%4].noOfInclusions++;
+                                    map[1][(j+1)%4].noOfInclusions++;
+
+                                    temp.size = 4;
+
+                                    imps.push_back(temp);
+
+
+                                }
+                        }
 
 
 
@@ -187,3 +194,5 @@ void KMap::extract() {
 
 
 }
+
+//TODO: 1. Sorting algorithm for vector of implicants based on size 2. function updating number of inclusions for 1s.
