@@ -1,10 +1,13 @@
 //
 // Created by Laila Nasser ElKoussy 900160812 on 3/2/18.
+// Yousef Mohab Koura - 900160083
 //
 
 #include "KMap.h"
 #include <vector>
+#include<iostream>
 #include <iomanip>
+#include <string>
 
 KMap::KMap() {
     for (int i = 0; i < 2; i++)
@@ -50,6 +53,7 @@ void KMap::inputEx(string &a) {
     }
     noOfOnes(); // updates numbers of ones based on the size of storage
 	fill();
+	extract();
 }
 
 void KMap::noOfOnes() {
@@ -109,90 +113,106 @@ void KMap::printMap() {
 
  }
 
-void KMap::extract() {
-    KMap::Implicant temp;
+ void KMap::extract() {
+	 KMap::Implicant temp;
 
-        for (int i = 0; i < 2; i++)
-            for (int j = 0; j < 4; j++) {
-                if (map[i][j].value == 1){ //the if statement that includes the minterm itself only
-                    temp.mins.push_back(map[i][j]);
-                    temp.size = 1;
-                    imps.push_back(temp);
-                    map[i][j].noOfInclusions++;
+	 for (int i = 0; i < 2; i++)
+		 for (int j = 0; j < 4; j++) {
+			 if (map[i][j].value == 1) { //the if statement that includes the minterm itself only
+				 temp.mins.push_back(map[i][j]);
+				 temp.size = 1;
+				 imps.push_back(temp);
+				 map[i][j].noOfInclusions++;
 
-                    if (map[i][(j+1)%4].value == 1) { // checking if the one next to it is 1
-                        temp.mins.push_back(map[i][(j+1)%4]);
-                        temp.size = 2;
-                        imps.push_back(temp);
-                        map[i][j].noOfInclusions++;
-                        map[i][(j+1)%4].noOfInclusions++;
-                        temp.mins.pop_back();
+				 if (map[i][(j + 1) % 4].value == 1) { // checking if the one next to it is 1
+					 temp.mins.push_back(map[i][(j + 1) % 4]);
+					 temp.size = 2;
+					 imps.push_back(temp);
+					 map[i][j].noOfInclusions++;
+					 map[i][(j + 1) % 4].noOfInclusions++;
+					 temp.mins.pop_back();
 
-                    }
-
-
-                    if (ones>3){
-
-                    if (j==0){
-                        if ((map[i][1].value == 1) && (map[i][2].value == 1) && (map[i][3].value == 1)) { //handles line of 4s
-                            for (int k =1; k<4; k++)
-                            {   temp.mins.push_back(map[i][k]);
-                                map[i][k].noOfInclusions++;}
-
-                            map[i][0].noOfInclusions++;
-                            temp.size = 4;
-                            imps.push_back(temp);
-
-                            temp.mins.clear();
-                            temp.mins.push_back(map[i][j]);
-                            }
-
-                    }
-                    }
+				 }
 
 
-                    if (i==0){
-                        if (map[1][j].value == 1){ // checking under
-                            temp.mins.push_back(map[1][j]);
-                            temp.size = 2;
-                            imps.push_back(temp);
-                            map[0][j].noOfInclusions++;
-                            map[1][j].noOfInclusions++;
+				 if (ones > 3) {
 
-                            if (ones>3){
+					 if (j == 0) {
+						 if ((map[i][1].value == 1) && (map[i][2].value == 1) && (map[i][3].value == 1)) { //handles line of 4s
+							 for (int k = 1; k < 4; k++)
+							 {
+								 temp.mins.push_back(map[i][k]);
+								 map[i][k].noOfInclusions++;
+							 }
 
+							 map[i][0].noOfInclusions++;
+							 temp.size = 4;
+							 imps.push_back(temp);
 
-                                if ((map[0][(j+1)%4].value == 1) && (map[1][(j+1)%4].value == 1)){ // checking the square
-                                    temp.mins.push_back(map[0][(j+1)%4]);
-                                    temp.mins.push_back(map[1][(j+1)%4]);
-                                    map[0][j].noOfInclusions++;
-                                    map[1][j].noOfInclusions++;
-                                    map[0][(j+1)%4].noOfInclusions++;
-                                    map[1][(j+1)%4].noOfInclusions++;
+							 temp.mins.clear();
+							 temp.mins.push_back(map[i][j]);
+						 }
 
-                                    temp.size = 4;
-
-                                    imps.push_back(temp);
+					 }
+				 }
 
 
-                                }
-                        }
+				 if (i == 0) {
+					 if (map[1][j].value == 1) { // checking under
+						 temp.mins.push_back(map[1][j]);
+						 temp.size = 2;
+						 imps.push_back(temp);
+						 map[0][j].noOfInclusions++;
+						 map[1][j].noOfInclusions++;
+
+						 if (ones > 3) {
 
 
+							 if ((map[0][(j + 1) % 4].value == 1) && (map[1][(j + 1) % 4].value == 1)) { // checking the square
+								 temp.mins.push_back(map[0][(j + 1) % 4]);
+								 temp.mins.push_back(map[1][(j + 1) % 4]);
+								 map[0][j].noOfInclusions++;
+								 map[1][j].noOfInclusions++;
+								 map[0][(j + 1) % 4].noOfInclusions++;
+								 map[1][(j + 1) % 4].noOfInclusions++;
 
-                        }
+								 temp.size = 4;
 
-                    }
-                }
+								 imps.push_back(temp);
+
+
+							 }
+						 }
 
 
 
+					 }
+
+				 }
+			 }
 
 
 
-            }
 
 
+
+		 }
+
+	//Test Code, I'll list what each cout does just in case I misunderstood what some parts of the structs did :D
+	cout << imps.size() << endl << endl; //Prints the size of the implicant vector (to show how many implicants we have in total)
+
+	for (int i = 0; i < imps.size(); i++)
+	{
+		cout << "imp" <<i+1<< ": "<<imps[i].name << endl; //Prints the name of the implicant (which should be the boolean expression, but is currently empty)
+		cout << "size: "<< imps[i].size << endl; //Prints the size of the current implicant to show how many minterms are in it 
+		cout << "includes the following minterms: " << endl;
+		for (int j = 0; j < imps[i].mins.size(); j++)
+			cout <<imps[i].mins[j].decIndex<<endl; //Prints the indices of the minterms included in the implicant
+			cout << endl;
+	}
+	//I think there's a disconnect between the size and the number of minterms in the indices. When I tested input: "0,1", the first two inputs were fine. 
+	//However, the third had a size of 1 (which should be the case) but had 3 minterms in it (0,1,1).
+	//I think it should have had "1" only which leads me to believe that at some point it copies the minterms in the previous implicant (just a guess, will try to test this theory).
 }
 
 //TODO: 1. Sorting algorithm for vector of implicants based on size 2. function updating number of inclusions for 1s.
