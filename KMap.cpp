@@ -191,10 +191,8 @@ void KMap::printMap() {
 				 }
 			 }
 
-
-
-
-
+			 temp.mins.clear(); //Clears the temporary k-map so it's terms aren't added to the next one
+			 temp.size = 0;
 
 		 }
 
