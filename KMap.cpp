@@ -255,6 +255,7 @@ void KMap::simplify() {
             for (auto element : primeImps[i].mins){
                 cout<<element<<" ";
             }
+
             cout<<endl;
 
     }
