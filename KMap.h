@@ -39,13 +39,18 @@ private:
     void noOfOnes ();
     int ones, variables;
     Minterms map[2][4];
-    vector<Implicant> imps;
+    vector<Implicant> imps; //vector containing all implicants
+    vector <Implicant> primeImps; //vector containing prime implicants
 
     void fill (); //takes the storage vector and fills the array with the values
     int getIndex (int&);
     void printMap();
     void extract(); //this function extracts all possible implicants from the KMap
     bool useless (Implicant &); //function that checks if an implicant is useless, if useless returns true
+    void order (); //orders imps from biggest size to smallest
+    string translate (Implicant &); //translates implicant into string equivalent
+    void simplify();
+    void process(); //gets called by inputEx and then calls one function after the other
 
 
 };

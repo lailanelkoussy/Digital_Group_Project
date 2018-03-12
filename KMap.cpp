@@ -52,8 +52,7 @@ void KMap::inputEx(string &a) {
         }
     }
     noOfOnes(); // updates numbers of ones based on the size of storage
-	fill();
-	extract();
+	process();
 }
 
 void KMap::noOfOnes() {
@@ -196,7 +195,7 @@ void KMap::extract() {
 
 		 }
 
-	//Test Code, I'll list what each cout does just in case I misunderstood what some parts of the structs did :D
+	/*Test Code, I'll list what each cout does just in case I misunderstood what some parts of the structs did :D
 	cout << imps.size() << endl << endl; //Prints the size of the implicant vector (to show how many implicants we have in total)
 
 	for (int i = 0; i < imps.size(); i++)
@@ -207,28 +206,85 @@ void KMap::extract() {
 		for (int j = 0; j < imps[i].mins.size(); j++)
 			cout <<imps[i].mins[j]<<endl; //Prints the indices of the minterms included in the implicant
 			cout << endl;
-	}
+	}*/
  }
 
 bool KMap::useless (Implicant & a) {
 	int index;
-	for (auto element : a.mins)
+	for (auto element : a.mins) //for each element in min
 	{
 		index = getIndex (element);
 		if (element % 2 == 0) {
-			if (map[0][index].noOfInclusions == 1)
+			if (map[0][index].noOfInclusions == 1) //if it contains a minterms with only one inclusion then it isn't useless
 				return false; }
 		else {
 			if (map[1][index].noOfInclusions == 1)
 				return false;
-
 		}
 
-		return false;
 	}
 
 	return true;
 }
 
-//TODO: 1. Sorting algorithm for vector of implicants based on size 2. delete useless implicants
-// and update number of inclusions in the map
+void KMap::simplify() {
+// when called, imps is already ordered from biggest size to smallest (job done by order, called by process)
+    int index, size = imps.size();
+    for (int i = 0 ; i< size ; i++) {
+        if (useless(imps.back())) {
+
+            for (auto element : imps.back().mins) { //before deleting the implicant, we decrease the number of inclusions for each one of its minterms
+                index = getIndex(element);
+                if (element % 2 == 0)
+                    map[0][index].noOfInclusions--;
+
+                else map[1][index].noOfInclusions--;
+
+            }
+        }
+
+        else
+            primeImps.push_back(imps.back());
+
+        imps.pop_back(); //deletes the implicant
+    }
+    cout<<"The simplified version contains "<<primeImps.size()<<" implicant(s)."<<endl;
+    for (int i = 0; i<primeImps.size(); i++){
+        cout<<"Imp number "<<i+1<<endl
+            <<"includes: ";
+            for (auto element : primeImps[i].mins){
+                cout<<element<<" ";
+            }
+            cout<<endl;
+
+    }
+}
+
+void KMap::process() {
+    fill();
+    extract();
+    order();
+    simplify();
+
+
+}
+
+void KMap::order() {
+    bool swapped;
+    Implicant temp;
+do {
+    swapped = false;
+    for (int i = 0; i<imps.size() ; i++)
+        if (imps[i].size < imps[i+1].size){
+            temp = imps[i];
+            imps[i] = imps[i+1];
+            imps[i+1] = temp;
+            swapped = true;
+
+    }
+} while (swapped);
+
+
+}
+
+//TODO: 1. Translate to string version 2. Add condition if all of them are ones
