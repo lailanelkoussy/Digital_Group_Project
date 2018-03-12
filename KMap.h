@@ -51,7 +51,8 @@ private:
     string translate (Implicant &); //translates implicant into string equivalent
     void simplify();
     void process(); //gets called by inputEx and then calls one function after the other
-
+	void tautology(); //processes the k-map if it's all 1's
+	string decToBin(int);
 
 };
 

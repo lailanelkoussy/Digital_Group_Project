@@ -4,8 +4,6 @@
 //
 
 #include "KMap.h"
-#include <vector>
-#include<iostream>
 #include <iomanip>
 #include <string>
 
@@ -52,7 +50,8 @@ void KMap::inputEx(string &a) {
         }
     }
     noOfOnes(); // updates numbers of ones based on the size of storage
-	process();
+	if(ones<8) process();
+	else tautology();
 }
 
 void KMap::noOfOnes() {
@@ -259,6 +258,13 @@ void KMap::simplify() {
             cout<<endl;
 
     }
+	cout << "The reduced boolean expression is: ";
+	for (int i = 0; i < primeImps.size(); i++)
+	{
+		cout << translate(primeImps[i]);
+		if (i != primeImps.size() - 1)cout << " + ";
+	}
+	cout << endl;
 }
 
 void KMap::process() {
@@ -270,12 +276,37 @@ void KMap::process() {
 
 }
 
+void KMap::tautology()
+{
+	fill();
+	cout << "This k-map represents a tautology (always true) and doesn't have an expression." << endl;
+}
+
+string KMap::decToBin(int n)
+{
+	string binS;
+	int r, p = 1, binI = 0;
+	while (n > 0)
+	{
+		r = n % 2;
+		binI += r*p;
+		n /= 2;
+		p *= 10;
+	}
+	binS = to_string(binI);
+	while (binS.size() < 3)
+	{
+		binS = '0' + binS;
+	}
+	return binS;
+}
+
 void KMap::order() {
     bool swapped;
     Implicant temp;
 do {
     swapped = false;
-    for (int i = 0; i<imps.size() ; i++)
+    for (int i = 0; i<imps.size()-1 ; i++)
         if (imps[i].size < imps[i+1].size){
             temp = imps[i];
             imps[i] = imps[i+1];
@@ -286,6 +317,41 @@ do {
 } while (swapped);
 
 
+}
+
+string KMap::translate(Implicant &imp)
+{
+	vector<string> minBits;
+	string exp;
+	bool equivalent = true;
+	int trackloc = 0;
+
+	for (int i = 0; i < imp.mins.size(); i++)
+		minBits.push_back(decToBin(imp.mins[i]));
+
+	for (int j = 0; j < 3; j++)
+	{
+		for (int k = 0; k < minBits.size() - 1 && (equivalent == true); k++)
+		{
+			if (minBits[k].at(j) != minBits[k + 1].at(j)) equivalent = false;
+		}
+
+		if (equivalent)
+		{
+			if (minBits[0].at(j) == '1') exp+= char(int('A') + j);
+			else
+			{
+				string temp = "";
+				temp += char('A' + j);
+				temp += '\'';
+				exp += temp;
+				trackloc++;
+			}
+		}
+		equivalent = true;
+	}
+	
+	return exp;
 }
 
 //TODO: 1. Translate to string version 2. Add condition if all of them are ones

@@ -3,10 +3,11 @@
 #include <vector>
 #include "KMap.h"
 
-
 using namespace std;
 
-int main() {
+
+int main() 
+{
     string input, temp="";
     KMap kmap;
     int preloc = 0;
@@ -15,7 +16,7 @@ int main() {
     unsigned long isize;
     vector<int> storage;
 
-    cout<<"Please enter the minterms: ";
+	cout<<"Please enter the minterms (in this form: \"0,1,2,3.\") : ";
     do
     {
         getline(cin,input);
@@ -24,7 +25,7 @@ int main() {
 
 
         for (int i = 0; i<isize-1; i++){
-            if (input[i] == '.')
+			if (input[i] == '.' || ((input[i] > '7' || input[i] < '0')&& input[i]!=','))
             { accepted = false;
                 cout<<"invalid input. Please re-enter: ";
                 break; }
@@ -36,6 +37,8 @@ int main() {
     } while (!accepted);
 
     kmap.inputEx(input);
+	
 
+	system("pause");
     return 0;
 }
