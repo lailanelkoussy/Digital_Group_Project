@@ -36,7 +36,6 @@ int main() {
     } while (!accepted);
 
     kmap.inputEx(input);
-	
-	system("pause");
+
     return 0;
 }

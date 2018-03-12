@@ -119,13 +119,13 @@ void KMap::printMap() {
 	 for (int i = 0; i < 2; i++)
 		 for (int j = 0; j < 4; j++) {
 			 if (map[i][j].value == 1) { //the if statement that includes the minterm itself only
-				 temp.mins.push_back(map[i][j]);
+				 temp.mins.push_back(map[i][j].decIndex);
 				 temp.size = 1;
 				 imps.push_back(temp);
 				 map[i][j].noOfInclusions++;
 
 				 if (map[i][(j + 1) % 4].value == 1) { // checking if the one next to it is 1
-					 temp.mins.push_back(map[i][(j + 1) % 4]);
+					 temp.mins.push_back(map[i][(j + 1) % 4].decIndex);
 					 temp.size = 2;
 					 imps.push_back(temp);
 					 map[i][j].noOfInclusions++;
@@ -141,7 +141,7 @@ void KMap::printMap() {
 						 if ((map[i][1].value == 1) && (map[i][2].value == 1) && (map[i][3].value == 1)) { //handles line of 4s
 							 for (int k = 1; k < 4; k++)
 							 {
-								 temp.mins.push_back(map[i][k]);
+								 temp.mins.push_back(map[i][k].decIndex);
 								 map[i][k].noOfInclusions++;
 							 }
 
@@ -150,7 +150,7 @@ void KMap::printMap() {
 							 imps.push_back(temp);
 
 							 temp.mins.clear();
-							 temp.mins.push_back(map[i][j]);
+							 temp.mins.push_back(map[i][j].decIndex);
 						 }
 
 					 }
@@ -159,7 +159,7 @@ void KMap::printMap() {
 
 				 if (i == 0) {
 					 if (map[1][j].value == 1) { // checking under
-						 temp.mins.push_back(map[1][j]);
+						 temp.mins.push_back(map[1][j].decIndex);
 						 temp.size = 2;
 						 imps.push_back(temp);
 						 map[0][j].noOfInclusions++;
@@ -169,8 +169,8 @@ void KMap::printMap() {
 
 
 							 if ((map[0][(j + 1) % 4].value == 1) && (map[1][(j + 1) % 4].value == 1)) { // checking the square
-								 temp.mins.push_back(map[0][(j + 1) % 4]);
-								 temp.mins.push_back(map[1][(j + 1) % 4]);
+								 temp.mins.push_back(map[0][(j + 1) % 4].decIndex);
+								 temp.mins.push_back(map[1][(j + 1) % 4].decIndex);
 								 map[0][j].noOfInclusions++;
 								 map[1][j].noOfInclusions++;
 								 map[0][(j + 1) % 4].noOfInclusions++;
@@ -205,7 +205,7 @@ void KMap::printMap() {
 		cout << "size: "<< imps[i].size << endl; //Prints the size of the current implicant to show how many minterms are in it 
 		cout << "includes the following minterms: " << endl;
 		for (int j = 0; j < imps[i].mins.size(); j++)
-			cout <<imps[i].mins[j].decIndex<<endl; //Prints the indices of the minterms included in the implicant
+			cout <<imps[i].mins[j]<<endl; //Prints the indices of the minterms included in the implicant
 			cout << endl;
 	}
 	//I think there's a disconnect between the size and the number of minterms in the indices. When I tested input: "0,1", the first two inputs were fine. 
@@ -213,4 +213,5 @@ void KMap::printMap() {
 	//I think it should have had "1" only which leads me to believe that at some point it copies the minterms in the previous implicant (just a guess, will try to test this theory).
 }
 
-//TODO: 1. Sorting algorithm for vector of implicants based on size 2. function updating number of inclusions for 1s.
+//TODO: 1. Sorting algorithm for vector of implicants based on size 2. delete useless implicants
+// and update number of inclusions in the map

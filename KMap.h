@@ -30,7 +30,7 @@ private:
 
     struct Implicant {
         string name;
-        vector<Minterms> mins;
+        vector<int> mins;
         int size; //the number of ones inside of it
 
     };
