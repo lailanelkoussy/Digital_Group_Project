@@ -107,14 +107,14 @@ void KMap::printMap() {
     }
 }
 
- KMap::Minterms::Minterms() {
+KMap::Minterms::Minterms() {
      value = 0;
      noOfInclusions = 0;
 
  }
 
- void KMap::extract() {
-	 KMap::Implicant temp;
+void KMap::extract() {
+	KMap::Implicant temp;
 
 	 for (int i = 0; i < 2; i++)
 		 for (int j = 0; j < 4; j++) {
@@ -208,9 +208,26 @@ void KMap::printMap() {
 			cout <<imps[i].mins[j]<<endl; //Prints the indices of the minterms included in the implicant
 			cout << endl;
 	}
-	//I think there's a disconnect between the size and the number of minterms in the indices. When I tested input: "0,1", the first two inputs were fine. 
-	//However, the third had a size of 1 (which should be the case) but had 3 minterms in it (0,1,1).
-	//I think it should have had "1" only which leads me to believe that at some point it copies the minterms in the previous implicant (just a guess, will try to test this theory).
+ }
+
+bool KMap::useless (Implicant & a) {
+	int index;
+	for (auto element : a.mins)
+	{
+		index = getIndex (element);
+		if (element % 2 == 0) {
+			if (map[0][index].noOfInclusions == 1)
+				return false; }
+		else {
+			if (map[1][index].noOfInclusions == 1)
+				return false;
+
+		}
+
+		return false;
+	}
+
+	return true;
 }
 
 //TODO: 1. Sorting algorithm for vector of implicants based on size 2. delete useless implicants

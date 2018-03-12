@@ -45,6 +45,7 @@ private:
     int getIndex (int&);
     void printMap();
     void extract(); //this function extracts all possible implicants from the KMap
+    bool useless (Implicant &); //function that checks if an implicant is useless, if useless returns true
 
 
 };
