@@ -1,6 +1,5 @@
 //
-// Created by Laila Nasser ElKoussy 900160812 on 3/2/18.
-// Yousef Mohab Koura - 900160083
+// Created by Laila Nasser ElKoussy 900160812 and Yousef Mohab Koura 900160083 on 3/2/18.
 //
 
 #include "KMap.h"
@@ -11,30 +10,26 @@ KMap::KMap() {
     for (int i = 0; i < 2; i++)
         for (int j = 0; j < 4; j++)
             map[i][j].value = 0;
-
-
 }
 
 KMap::~KMap() {
 
 }
 
-void KMap::inputEx(string &a) {
+void KMap::Generate(string &a) {
     string temp = "";
     int preloc = 0;
     bool inte = true;
     unsigned long isize = a.length(); //size of the input
-
 
     for (int i = 0; i < isize; i++) {
         if ((a[i] == ',') || (i == isize - 1)) { // checks for commas or end of input
             for (int j = preloc; j < i; j++) //basically just goes from the last saved location (where the number
                 temp += a[j];            //started) to right before the current comma and puts it all in temp
             if (i == isize - 1)
-                temp += a[i];            //when it's the last position it skips the last one so I just add it lol
-            cout << temp << endl;            //the random couts scattered are used for debugging
+                temp += a[i];            //when it's the last position it skips the last one so it's added
 
-            if (temp.length() > 1) //checking to see if got any periods or spaces characters
+            if (temp.length() > 1) //checking to see if got any periods or space characters
             {
                 for (int r = 0; r < temp.length() && inte; r++) {
                     if ((temp[r] == '.') || (isspace(temp[r]))) {
@@ -46,11 +41,11 @@ void KMap::inputEx(string &a) {
             storage.push_back(stoi(temp)); //turns temp into an int and pushes it into storage
             temp = "";
             preloc = i + 1; //updates where the next number starts (after the comma by one)
-
         }
     }
+
     noOfOnes(); // updates numbers of ones based on the size of storage
-	if(ones<8) process();
+	if(ones<8) process(); //checks if it's a tautology (no need to process if it is)
 	else tautology();
 }
 
@@ -74,9 +69,9 @@ void KMap::fill() {
 
     }
 
-    cout << "The K-Map looks like this: " << endl;
+    cout << "\nThe K-Map looks like this: " << endl;
     printMap();
-
+	cout << endl;
 }
 
 int KMap::getIndex(int &a) { //this is me taking the easy way out instead of using binary conversion lol
@@ -94,7 +89,6 @@ int KMap::getIndex(int &a) { //this is me taking the easy way out instead of usi
             return 3;
 
     }
-
 }
 
 void KMap::printMap() {
@@ -108,14 +102,14 @@ void KMap::printMap() {
 KMap::Minterms::Minterms() {
      value = 0;
      noOfInclusions = 0;
-
  }
 
 void KMap::extract() {
 	KMap::Implicant temp;
 
 	 for (int i = 0; i < 2; i++)
-		 for (int j = 0; j < 4; j++) {
+		 for (int j = 0; j < 4; j++) 
+		 {
 			 if (map[i][j].value == 1) { //the if statement that includes the minterm itself only
 				 temp.mins.push_back(map[i][j].decIndex);
 				 temp.size = 1;
@@ -132,9 +126,8 @@ void KMap::extract() {
 
 				 }
 
-
-				 if (ones > 3) {
-
+				 if (ones > 3) 
+				 {
 					 if (j == 0) {
 						 if ((map[i][1].value == 1) && (map[i][2].value == 1) && (map[i][3].value == 1)) { //handles line of 4s
 							 for (int k = 1; k < 4; k++)
@@ -155,7 +148,8 @@ void KMap::extract() {
 				 }
 
 
-				 if (i == 0) {
+				 if (i == 0) 
+				 {
 					 if (map[1][j].value == 1) { // checking under
 						 temp.mins.push_back(map[1][j].decIndex);
 						 temp.size = 2;
@@ -163,9 +157,8 @@ void KMap::extract() {
 						 map[0][j].noOfInclusions++;
 						 map[1][j].noOfInclusions++;
 
-						 if (ones > 3) {
-
-
+						 if (ones > 3) 
+						 {
 							 if ((map[0][(j + 1) % 4].value == 1) && (map[1][(j + 1) % 4].value == 1)) { // checking the square
 								 temp.mins.push_back(map[0][(j + 1) % 4].decIndex);
 								 temp.mins.push_back(map[1][(j + 1) % 4].decIndex);
@@ -177,35 +170,15 @@ void KMap::extract() {
 								 temp.size = 4;
 
 								 imps.push_back(temp);
-
-
 							 }
 						 }
-
-
-
 					 }
-
 				 }
 			 }
 
-			 temp.mins.clear(); //Clears the temporary k-map so it's terms aren't added to the next one
+			 temp.mins.clear(); //Clears the temporary k-map so its terms aren't added to the next one
 			 temp.size = 0;
-
 		 }
-
-	/*Test Code, I'll list what each cout does just in case I misunderstood what some parts of the structs did :D
-	cout << imps.size() << endl << endl; //Prints the size of the implicant vector (to show how many implicants we have in total)
-
-	for (int i = 0; i < imps.size(); i++)
-	{
-		cout << "imp" <<i+1<< ": "<<imps[i].name << endl; //Prints the name of the implicant (which should be the boolean expression, but is currently empty)
-		cout << "size: "<< imps[i].size << endl; //Prints the size of the current implicant to show how many minterms are in it 
-		cout << "includes the following minterms: " << endl;
-		for (int j = 0; j < imps[i].mins.size(); j++)
-			cout <<imps[i].mins[j]<<endl; //Prints the indices of the minterms included in the implicant
-			cout << endl;
-	}*/
  }
 
 bool KMap::useless (Implicant & a) {
@@ -213,14 +186,16 @@ bool KMap::useless (Implicant & a) {
 	for (auto element : a.mins) //for each element in min
 	{
 		index = getIndex (element);
-		if (element % 2 == 0) {
+		if (element % 2 == 0) 
+		{
 			if (map[0][index].noOfInclusions == 1) //if it contains a minterms with only one inclusion then it isn't useless
-				return false; }
-		else {
+				return false; 
+		}
+		else 
+		{
 			if (map[1][index].noOfInclusions == 1)
 				return false;
 		}
-
 	}
 
 	return true;
@@ -234,11 +209,8 @@ void KMap::simplify() {
 
             for (auto element : imps.back().mins) { //before deleting the implicant, we decrease the number of inclusions for each one of its minterms
                 index = getIndex(element);
-                if (element % 2 == 0)
-                    map[0][index].noOfInclusions--;
-
+                if (element % 2 == 0) map[0][index].noOfInclusions--;
                 else map[1][index].noOfInclusions--;
-
             }
         }
 
@@ -247,10 +219,11 @@ void KMap::simplify() {
 
         imps.pop_back(); //deletes the implicant
     }
-    cout<<"The simplified version contains "<<primeImps.size()<<" implicant(s)."<<endl;
+
+	cout << "The simplified version contains " << primeImps.size() << " essential prime implicant(s)." << endl << endl;
     for (int i = 0; i<primeImps.size(); i++){
-        cout<<"Imp number "<<i+1<<endl
-            <<"includes: ";
+		cout<<"Implicant #"<<i+1<<endl
+            <<"\tincludes: ";
             for (auto element : primeImps[i].mins){
                 cout<<element<<" ";
             }
@@ -258,10 +231,11 @@ void KMap::simplify() {
             cout<<endl;
 
     }
-	cout << "The reduced boolean expression is: ";
+	cout << "\nThe reduced boolean expression is: ";
 	for (int i = 0; i < primeImps.size(); i++)
 	{
-		cout << translate(primeImps[i]);
+		translate(primeImps[i]);
+		cout << primeImps[i].name;
 		if (i != primeImps.size() - 1)cout << " + ";
 	}
 	cout << endl;
@@ -272,14 +246,12 @@ void KMap::process() {
     extract();
     order();
     simplify();
-
-
 }
 
 void KMap::tautology()
 {
 	fill();
-	cout << "This k-map represents a tautology (always true) and doesn't have an expression." << endl;
+	cout << "This k-map represents a tautology (always true), F = 1." << endl;
 }
 
 string KMap::decToBin(int n)
@@ -293,8 +265,10 @@ string KMap::decToBin(int n)
 		n /= 2;
 		p *= 10;
 	}
+
 	binS = to_string(binI);
-	while (binS.size() < 3)
+
+	while (binS.size() < 3) // add 0's at the beginning of the bitstring to make sure it's a 3-bit string
 	{
 		binS = '0' + binS;
 	}
@@ -304,39 +278,37 @@ string KMap::decToBin(int n)
 void KMap::order() {
     bool swapped;
     Implicant temp;
-do {
-    swapped = false;
-    for (int i = 0; i<imps.size()-1 ; i++)
-        if (imps[i].size < imps[i+1].size){
-            temp = imps[i];
-            imps[i] = imps[i+1];
-            imps[i+1] = temp;
-            swapped = true;
+	do {
+		swapped = false;
+		 for (int i = 0; i<imps.size()-1 ; i++)
+			if (imps[i].size < imps[i+1].size){
+				temp = imps[i];
+				imps[i] = imps[i+1];
+				imps[i+1] = temp;
+				swapped = true;
 
-    }
-} while (swapped);
-
-
+		}
+	} while (swapped);
 }
 
-string KMap::translate(Implicant &imp)
+void KMap::translate(Implicant &imp)
 {
 	vector<string> minBits;
 	string exp;
 	bool equivalent = true;
 	int trackloc = 0;
 
-	for (int i = 0; i < imp.mins.size(); i++)
+	for (int i = 0; i < imp.mins.size(); i++) //fills vector with the bit equivalents of all included minterms
 		minBits.push_back(decToBin(imp.mins[i]));
 
-	for (int j = 0; j < 3; j++)
+	for (int j = 0; j < 3; j++) //handles the jth bit of all minterms simultaneously
 	{
-		for (int k = 0; k < minBits.size() - 1 && (equivalent == true); k++)
+		for (int k = 0; k < minBits.size() - 1 && (equivalent == true); k++) //checks to see if the jth bit is the same for all minterms (if not, then the jth literal is excluded)
 		{
 			if (minBits[k].at(j) != minBits[k + 1].at(j)) equivalent = false;
 		}
 
-		if (equivalent)
+		if (equivalent) //if the jth variable is found to be equivalent, the jth literal is add (as is or complemented based on whether it's a 0 or a 1)
 		{
 			if (minBits[0].at(j) == '1') exp+= char(int('A') + j);
 			else
@@ -351,7 +323,5 @@ string KMap::translate(Implicant &imp)
 		equivalent = true;
 	}
 	
-	return exp;
+	imp.name = exp; //updates the implicants name to hold its expression (product)
 }
-
-//TODO: 1. Translate to string version 2. Add condition if all of them are ones

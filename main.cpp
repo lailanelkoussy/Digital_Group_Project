@@ -5,40 +5,42 @@
 
 using namespace std;
 
-
 int main() 
 {
-    string input, temp="";
+	string input;
     KMap kmap;
-    int preloc = 0;
-    bool inte = true;
     bool accepted = true;
     unsigned long isize;
-    vector<int> storage;
 
 	cout<<"Please enter the minterms (in this form: \"0,1,2,3.\") : ";
     do
     {
         getline(cin,input);
-        cout<<input<<endl;
         isize = input.size();
 
-
-        for (int i = 0; i<isize-1; i++){
-			if (input[i] == '.' || ((input[i] > '7' || input[i] < '0')&& input[i]!=','))
-            { accepted = false;
-                cout<<"invalid input. Please re-enter: ";
-                break; }
-
-            else accepted = true;
-
-                                        }
+		if (isize < 2)
+		{
+			accepted = false;
+			cout << "invalid input. Please re-enter: ";
+		}
+		else
+		{
+			for (int i = 0; i < isize - 1; i++)
+			{
+				if (input[isize - 1] != '.' || ((input[i] > '7' || input[i] < '0') && input[i] != ',') || (input[i] == ',' && input[i + 1] == ',') || ((input[i] <= '7' && input[i] >= '0') && (input[i + 1] <= '7' && input[i + 1] >= '0')))
+				{
+					accepted = false;
+					cout << "invalid input. Please re-enter: ";
+					break;
+				}
+				else accepted = true;
+			}
+		}
 
     } while (!accepted);
 
-    kmap.inputEx(input);
+    kmap.Generate(input);
 	
-
 	system("pause");
     return 0;
 }
