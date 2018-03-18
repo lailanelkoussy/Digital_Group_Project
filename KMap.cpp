@@ -58,14 +58,11 @@ void KMap::fill() {
 
     for (auto element: storage) {
         index = getIndex(element);
-        if (element % 2 == 0) // all even minterms are in the first row
-        {   map[0][index].value = 1;
-            map[0][index].decIndex = element; }
 
-        else {
-            map[1][index].value = 1;
-            map[1][index].decIndex = element;
-        }
+        map[element % 2 == 0][index].value = 1;
+        map[element % 2 == 0][index].decIndex = element;
+
+
 
     }
 
@@ -186,16 +183,11 @@ bool KMap::useless (Implicant & a) {
 	for (auto element : a.mins) //for each element in min
 	{
 		index = getIndex (element);
-		if (element % 2 == 0) 
-		{
-			if (map[0][index].noOfInclusions == 1) //if it contains a minterms with only one inclusion then it isn't useless
-				return false; 
-		}
-		else 
-		{
-			if (map[1][index].noOfInclusions == 1)
-				return false;
-		}
+
+        if (map[element % 2 == 0][index].noOfInclusions == 1) //if it contains a minterms with only one inclusion then it isn't useless
+            return false;
+
+
 	}
 
 	return true;
@@ -209,8 +201,8 @@ void KMap::simplify() {
 
             for (auto element : imps.back().mins) { //before deleting the implicant, we decrease the number of inclusions for each one of its minterms
                 index = getIndex(element);
-                if (element % 2 == 0) map[0][index].noOfInclusions--;
-                else map[1][index].noOfInclusions--;
+                map[element % 2 == 0][index].noOfInclusions--;
+
             }
         }
 
