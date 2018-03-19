@@ -59,8 +59,8 @@ void KMap::fill() {
     for (auto element: storage) {
         index = getIndex(element);
 
-        map[element % 2 != 0][index].value = 1;
-        map[element % 2 != 0][index].decIndex = element;
+        map[element % 2][index].value = 1;
+        map[element % 2][index].decIndex = element;
 
 
 
@@ -105,7 +105,7 @@ void KMap::extract() {
 	KMap::Implicant temp;
 
 	 for (int i = 0; i < 2; i++)
-		 for (int j = 0; j < 4; j++) 
+		 for (int j = 0; j < 4; j++)
 		 {
 			 if (map[i][j].value == 1) { //the if statement that includes the minterm itself only
 				 temp.mins.push_back(map[i][j].decIndex);
@@ -123,7 +123,7 @@ void KMap::extract() {
 
 				 }
 
-				 if (ones > 3) 
+				 if (ones > 3)
 				 {
 					 if (j == 0) {
 						 if ((map[i][1].value == 1) && (map[i][2].value == 1) && (map[i][3].value == 1)) { //handles line of 4s
@@ -145,7 +145,7 @@ void KMap::extract() {
 				 }
 
 
-				 if (i == 0) 
+				 if (i == 0)
 				 {
 					 if (map[1][j].value == 1) { // checking under
 						 temp.mins.push_back(map[1][j].decIndex);
@@ -154,7 +154,7 @@ void KMap::extract() {
 						 map[0][j].noOfInclusions++;
 						 map[1][j].noOfInclusions++;
 
-						 if (ones > 3) 
+						 if (ones > 3)
 						 {
 							 if ((map[0][(j + 1) % 4].value == 1) && (map[1][(j + 1) % 4].value == 1)) { // checking the square
 								 temp.mins.push_back(map[0][(j + 1) % 4].decIndex);
@@ -184,7 +184,7 @@ bool KMap::useless (Implicant & a) {
 	{
 		index = getIndex (element);
 
-        if (map[element % 2 != 0][index].noOfInclusions == 1) //if it contains a minterms with only one inclusion then it isn't useless
+        if (map[element % 2][index].noOfInclusions == 1) //if it contains a minterms with only one inclusion then it isn't useless
             return false;
 
 
@@ -201,7 +201,7 @@ void KMap::simplify() {
 
             for (auto element : imps.back().mins) { //before deleting the implicant, we decrease the number of inclusions for each one of its minterms
                 index = getIndex(element);
-                map[element % 2 != 0][index].noOfInclusions--;
+                map[element % 2][index].noOfInclusions--;
 
             }
         }
